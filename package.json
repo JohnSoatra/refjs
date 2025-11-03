@@ -1,0 +1,46 @@
+{
+  "name": "refjs",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": "John Soatra",
+  "description": "A Javascript library for reactive state management.",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JohnSoatra/refjs"
+  },
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.2.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "chokidar": "^4.0.3",
+    "rollup": "^4.52.4",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-dts": "^6.2.3",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "state",
+    "ref",
+    "reactive",
+    "watch",
+    "proxy"
+  ]
+}
