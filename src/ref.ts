@@ -2,12 +2,30 @@ import Keys from './constants/keys';
 import createProxy from './utils/createProxy';
 import handleChange from './utils/handleChange';
 import { getNow } from './utils/utils';
-import { Changes, OnChange, Ref } from './types/ref';
+import { Changes, OnChangeHandler, Ref } from './types/ref';
 
-function ref<T>(initial: T, onchange?: OnChange): Ref<T>;
+/**
+ * Creates a reactive reference object.
+ *
+ * The returned object has a `value` property that is reactive. Any changes
+ * to `value` or nested objects/arrays will trigger the `onchange` callback if provided.
+ *
+ * Example usage:
+ * ```ts
+ * const count = ref(0, (event) => {
+ *   console.log(event.value); // Logs the new value
+ * });
+ * count.value = 5; // Triggers onchange
+ * ```
+ *
+ * @param initial The initial value of the reactive reference.
+ * @param onchange Optional callback that is called whenever the value changes.
+ * @returns A reactive reference object of type `Ref<T>`.
+ */
+function ref<T>(initial: T, onchange?: OnChangeHandler): Ref<T>;
 function ref<T = undefined>(): Ref<T | undefined>;
-function ref<T>(initial?: T, onchange?: OnChange): Ref<T | undefined> {
-  let onChange: OnChange | undefined = onchange;
+function ref<T>(initial?: T, onchange?: OnChangeHandler): Ref<T | undefined> {
+  let onChange: OnChangeHandler | undefined = onchange;
   const cacheProxy = new WeakMap();
   const cacheShallow = new WeakMap();
   const changes: Changes = {

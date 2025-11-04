@@ -1,6 +1,6 @@
 import createProxy from "../createProxy";
 import { creatable, getRaw, getWeakValue, isProxy } from "../utils";
-import { OnChange } from "../../types/ref";
+import { OnChangeHandler } from "../../types/ref";
 import { CacheProxy, CacheShallow } from "../../types/createProxy";
 
 export default function deleteWeakMapHandler(
@@ -9,7 +9,7 @@ export default function deleteWeakMapHandler(
   key: object,
   cacheProxy: CacheProxy,
   cacheShallow: CacheShallow,
-  onChange: OnChange,
+  onChange: OnChangeHandler,
 ) {
   let prevValue = getWeakValue(proxy, key);
   let deleted = target.delete(key);

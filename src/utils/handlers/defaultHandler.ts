@@ -1,5 +1,5 @@
 import { toProxies } from "../utils";
-import { OnChange } from "../../types/ref";
+import { OnChangeHandler } from "../../types/ref";
 import { CacheProxy, CacheShallow } from "../../types/createProxy";
 
 export default function defaultHandler(
@@ -8,7 +8,7 @@ export default function defaultHandler(
   key: string | symbol,
   cacheProxy: CacheProxy,
   cacheShallow: CacheShallow,
-  onChange: OnChange,
+  onChange: OnChangeHandler,
   ...args: any[]
 ) {
   const result = (target  as any)[key](...toProxies(

@@ -1,6 +1,6 @@
 import createProxy from "../createProxy";
 import { creatable, isProxy } from "../utils";
-import { OnChange } from "../../types/ref";
+import { OnChangeHandler } from "../../types/ref";
 import { CacheProxy, CacheShallow } from "../../types/createProxy";
 
 export default function setHandler(
@@ -9,7 +9,7 @@ export default function setHandler(
   value: Set<any>,
   cacheProxy: CacheProxy,
   cacheShallow: CacheShallow,
-  onChange: OnChange,
+  onChange: OnChangeHandler,
 ) {
   let shallow: Set<any>;
 

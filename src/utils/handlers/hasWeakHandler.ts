@@ -1,6 +1,6 @@
 import createProxy from "../createProxy";
 import { creatable, getRaw, isProxy } from "../utils";
-import { OnChange } from "../../types/ref";
+import { OnChangeHandler } from "../../types/ref";
 import { CacheProxy, CacheShallow } from "../../types/createProxy";
 
 export default function hasWeakMapHandler(
@@ -8,7 +8,7 @@ export default function hasWeakMapHandler(
   key: object,
   cacheProxy: CacheProxy,
   cacheShallow: CacheShallow,
-  onChange: OnChange,
+  onChange: OnChangeHandler,
 ) {
   let hasValue = value.has(key);
 

@@ -9,14 +9,14 @@ import getWeakMapHandler from "./handlers/getWeakHandler";
 import hasWeakMapHandler from "./handlers/hasWeakHandler";
 import deleteWeakMapHandler from "./handlers/deleteWeakHandler";
 import defaultHandler from "./handlers/defaultHandler";
-import { OnChange } from "../types/ref";
+import { OnChangeHandler } from "../types/ref";
 import { CacheProxy, CacheShallow } from "../types/createProxy";
 
 export default function createProxy<T extends Record<string, any>>(
   content: T,
   cacheProxy: CacheProxy,
   cacheShallow: CacheShallow,
-  onChange: OnChange,
+  onChange: OnChangeHandler,
   saveProxy?: boolean,
 ) {
   if (isProxy(content)) {

@@ -1,7 +1,7 @@
 import createProxy from "./createProxy";
 import MutationMethods from "../constants/mutationMethods";
 import Symbols from "../constants/symbols";
-import { OnChange } from "../types/ref";
+import { OnChangeHandler } from "../types/ref";
 import { CacheProxy, CacheShallow } from "../types/createProxy";
 
 export function creatable(value: any) {
@@ -28,7 +28,7 @@ export function mutationMethod(obj: object, key: string) {
 export function toProxies(
   cacheProxy: CacheProxy,
   cacheShallow: CacheShallow,
-  onChange: OnChange,
+  onChange: OnChangeHandler,
   ...args: any[]
 ) {
   let array: any[] = [];

@@ -1,10 +1,10 @@
 import Max from "../constants/max";
-import { Changes, OnChange, ChangeEvent } from "../types/ref";
+import { Changes, OnChangeHandler, ChangeEvent } from "../types/ref";
 import { getNow, nextFrame } from "./utils";
 
 export default function handleChange(
   changes: Changes,
-  onChange: OnChange | undefined,
+  onChange: OnChangeHandler | undefined,
   props: ChangeEvent,
 ) {
   if (onChange) {
@@ -31,7 +31,7 @@ export default function handleChange(
         try {
           onChange?.(props);
         } catch (error) {
-          console.error('[vref] onChange error:', error);
+          console.error('[vref] onchange error:', error);
         }
       });
     }
