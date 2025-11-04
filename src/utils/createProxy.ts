@@ -17,6 +17,7 @@ export default function createProxy<T extends Record<string, any>>(
   cacheProxy: CacheProxy,
   cacheShallow: CacheShallow,
   onChange: OnChange,
+  saveProxy?: boolean,
 ) {
   if (isProxy(content)) {
     return content;
@@ -26,9 +27,13 @@ export default function createProxy<T extends Record<string, any>>(
 
   const proxy = new Proxy(content, {
     get(target: any, key, receiver) {
+      if (typeof key === 'string' && Keys.ForbiddenKeys.includes(key)) {
+        return undefined;
+      }
       if (key === Symbols.IsProxy) {
         return true;
-      } else if (key === Symbols.RawObject) {
+      }
+      if (key === Symbols.RawObject) {
         return content;
       }
 
@@ -91,9 +96,10 @@ export default function createProxy<T extends Record<string, any>>(
       return value;
     },
     set(target, key, newValue, receiver) {
+      if (typeof key === 'string' && Keys.ForbiddenKeys.includes(key)) return true;
       const currentValue = target[key];
 
-      if (Object.is(currentValue, newValue)) {
+      if (!Object.is(currentValue, newValue)) {
         const prevValue = proxy[key];
         const result = Reflect.set(target, key, newValue, receiver);
 
@@ -110,6 +116,7 @@ export default function createProxy<T extends Record<string, any>>(
       return true;
     },
     deleteProperty(target, key) {
+      if (typeof key === 'string' && Keys.ForbiddenKeys.includes(key)) return true;
       const hasKey = Object.prototype.hasOwnProperty.call(target, key);
 
       if (hasKey) {
@@ -130,7 +137,9 @@ export default function createProxy<T extends Record<string, any>>(
     }
   });
 
-  cacheProxy.set(content, proxy);
+  if (saveProxy ?? true) {
+    cacheProxy.set(content, proxy);
+  }
 
   return proxy;
 }

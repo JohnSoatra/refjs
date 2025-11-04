@@ -16,7 +16,7 @@ export default function hasWeakMapHandler(
     if (isProxy(key)) {
       hasValue = value.has(getRaw(key));
     } else {
-      hasValue = value.has(createProxy(key, cacheProxy, cacheShallow, onChange));
+      hasValue = value.has(createProxy(key, cacheProxy, cacheShallow, onChange, false));
     }
   }
 

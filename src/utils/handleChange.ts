@@ -1,10 +1,35 @@
-import { OnChange } from "../types/ref";
+import Max from "../constants/max";
+import { Changes, OnChange } from "../types/ref";
+import { getNow, nextFrame } from "./utils";
 
 export default function handleChange(
+  changes: Changes,
   onChange: OnChange | undefined,
   ...props: Parameters<OnChange>
 ) {
   if (onChange) {
-    onChange(...props);
+    const now = getNow();
+
+    if (now - changes.latest > 16) {
+      changes.tick = 0;
+      changes.latest = now;
+    } else if (changes.tick >= Max.UpdateTick) {
+      console.warn(
+        `[vref] Maximum update limit reached (${Max.UpdateTick} per frame). ` +
+        `This may indicate a reactive loop or excessive nested updates. ` +
+        `Consider optimizing your state mutations or throttling updates.`
+      );
+    } else {
+      changes.tick += 1;
+      changes.latest = now;
+    }
+
+    if (!changes.scheduled) {
+      changes.scheduled = true;
+      nextFrame(() => {
+        changes.scheduled = false;
+        onChange(...props);
+      });
+    }
   }
 }

@@ -16,7 +16,7 @@ export default function getWeakMapHandler(
     if (isProxy(key)) {
       result = value.get(getRaw(key));
     } else {
-      result = value.get(createProxy(key, cacheProxy, cacheShallow, onChange));
+      result = value.get(createProxy(key, cacheProxy, cacheShallow, onChange, false));
     }
   }
 

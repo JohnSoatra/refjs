@@ -10,3 +10,9 @@ export type Ref<T> = {
   value: T;
   onchange: OnChange | undefined;
 };
+
+export type Changes = {
+  latest: number;
+  tick: number;
+  scheduled: boolean;
+}

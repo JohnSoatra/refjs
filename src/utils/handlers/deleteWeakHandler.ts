@@ -20,8 +20,8 @@ export default function deleteWeakMapHandler(
       prevValue = getWeakValue(proxy, rawKey);
       deleted = target.delete(rawKey);
     } else {
-      const proxyValue = createProxy(key, cacheProxy, cacheShallow, onChange);
-      prevValue = getWeakValue(proxy, prevValue);
+      const proxyValue = createProxy(key, cacheProxy, cacheShallow, onChange, false);
+      prevValue = getWeakValue(proxy, proxyValue);
       deleted = target.delete(proxyValue);
     }
   }

@@ -9,7 +9,7 @@ export function creatable(value: any) {
 }
 
 export function isArray(value: any): boolean {
-  return Array.isArray(value) || ArrayBuffer.isView(value);
+  return Array.isArray(value) || (ArrayBuffer.isView(value) && !(value instanceof DataView));
 }
 
 export function isProxy(value: any): boolean {
@@ -31,7 +31,7 @@ export function toProxies(
   onChange: OnChange,
   ...args: any[]
 ) {
-  let array:any[] = [];
+  let array: any[] = [];
 
   for (const each of args) {
     let result;
@@ -42,7 +42,7 @@ export function toProxies(
       } else if (cacheProxy.has(each)) {
         result = cacheProxy.get(each);
       } else {
-        result = createProxy(each, cacheProxy, cacheShallow, onChange);
+        result = createProxy(each, cacheProxy, cacheShallow, onChange, false);
       }
     } else {
       result = each;
@@ -58,19 +58,7 @@ export function shallowArray<T>(value: T): T {
   if (Array.isArray(value)) {
     return [...value] as T;
   }
-  if (
-    value instanceof Int8Array ||
-    value instanceof Int16Array ||
-    value instanceof Int32Array ||
-    value instanceof Uint8Array ||
-    value instanceof Uint8ClampedArray ||
-    value instanceof Uint16Array ||
-    value instanceof Uint32Array ||
-    value instanceof BigInt64Array ||
-    value instanceof BigUint64Array ||
-    value instanceof Float32Array ||
-    value instanceof Float64Array
-  ) {
+  if (ArrayBuffer.isView(value) && !(value instanceof DataView)) {
     return new (value.constructor as any)(value) as T;
   }
   return value;
@@ -83,4 +71,18 @@ export function getWeakValue(proxy: WeakMap<any, any> | WeakSet<any>, key: objec
     return key;
   }
   return undefined;
+}
+
+export function nextFrame(callback: () => void) {
+  if (typeof requestAnimationFrame === 'function') {
+    requestAnimationFrame(callback);
+  } else {
+    setImmediate(callback);
+  }
+}
+export function getNow() {
+  if (typeof performance !== 'undefined') {
+    return performance.now();
+  }
+  return Date.now();
 }
