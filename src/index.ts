@@ -1,2 +1,2 @@
 export { default } from "./ref";
-export { Ref } from "./types/ref";
+export { Ref, RefOptions } from "./types/ref";

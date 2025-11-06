@@ -1,4 +1,3 @@
-
 export type TypedArray =
   | Int8Array
   | Int16Array
