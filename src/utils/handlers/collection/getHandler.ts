@@ -1,4 +1,4 @@
-import { tryToCreateProxy, tryToGetRaw } from "../../utils";
+import { createProxyTry, getRawTry } from "../../utils";
 import { CacheProxy, CacheShallow } from "../../../types/createProxy";
 import { OnChangeHandler } from "../../../types/ref";
 
@@ -9,6 +9,5 @@ export default function getHandler(
   cacheShallow: CacheShallow,
   onChange: OnChangeHandler,
 ) {
-  const result = target.get(tryToGetRaw(key));
-  return tryToCreateProxy(result, cacheProxy, cacheShallow, onChange);
+  return createProxyTry(target.get(getRawTry(key)), cacheProxy, cacheShallow, onChange);
 }

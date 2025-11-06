@@ -1,6 +1,6 @@
 import LookupArrayMethods from "../../../constants/lookupMethods/array";
 import LookupTypedArrayMethods from "../../../constants/lookupMethods/typedArray";
-import { tryToGetRaw } from "../../utils";
+import { getRawTry } from "../../utils";
 import { TypedArray } from "../../../types/types";
 
 type LookupKey<T> = T extends any[] ?
@@ -12,7 +12,7 @@ function lookupArrayHandler<T extends any[] | TypedArray>(
   key: LookupKey<T>,
   ...args: any[]
 ) {
-  return target[key](tryToGetRaw(args[0]), ...args.slice(1));
+  return target[key](getRawTry(args[0]), ...args.slice(1));
 }
 
 export default lookupArrayHandler;

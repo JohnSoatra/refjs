@@ -13,9 +13,8 @@ function mutationArrayHandler<T extends any[] | TypedArray>(
   key: MutationKey<T>,
   onChange: OnChangeHandler,
   ...args: any[]
-): any {
+) {
   const result = (target as any)[key](...args);
-
   onChange({
     target: proxy,
     action: key,
@@ -23,7 +22,6 @@ function mutationArrayHandler<T extends any[] | TypedArray>(
     value: args,
     prevValue: undefined
   });
-
   return result === target ? proxy : result;
 }
 

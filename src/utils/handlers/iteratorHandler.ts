@@ -1,5 +1,5 @@
 import IteratorMethods from "../../constants/iteratorMethods";
-import { tryToCreateProxy } from "../utils";
+import { createProxyTry } from "../utils";
 import { TypedArray } from "../../types/types";
 import { CacheProxy, CacheShallow } from "../../types/createProxy";
 import { OnChangeHandler } from "../../types/ref";
@@ -12,12 +12,11 @@ export default function iteratorHandler(
   onChange: OnChangeHandler,
 ): Iterator<any> & Iterable<any> {
   const iterator = target[key]() as Iterator<any>;
-
   return {
     next(value?: any) {
       const result = iterator.next(value);
       if (!result.done) {
-        result.value = tryToCreateProxy(result.value, cacheProxy, cacheShallow, onChange);
+        result.value = createProxyTry(result.value, cacheProxy, cacheShallow, onChange);
       }
       return result;
     },

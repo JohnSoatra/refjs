@@ -1,7 +1,7 @@
 const Keys = {
   Get: 'get',
-  Add: 'add',
   Set: 'set',
+  Add: 'add',
   Has: 'has',
   Delete: 'delete',
   OnChange: 'onchange',

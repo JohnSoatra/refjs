@@ -1,4 +1,4 @@
-import { tryToGetRaw } from "../../utils";
+import { getRawTry } from "../../utils";
 import { OnChangeHandler } from "../../../types/ref";
 
 export default function addHandler(
@@ -7,9 +7,8 @@ export default function addHandler(
   value: any,
   onChange: OnChangeHandler,
 ) {
-  const rawValue = tryToGetRaw(value);
+  const rawValue = getRawTry(value);
   const hasValue = target.has(rawValue);
-
   if (!hasValue) {
     target.add(rawValue);
     onChange({
@@ -20,6 +19,5 @@ export default function addHandler(
       prevValue: undefined,
     });
   }
-
   return proxy;
 }

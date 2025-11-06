@@ -1,4 +1,4 @@
-import { tryToGetRaw } from "../../utils";
+import { getRawTry } from "../../utils";
 import { OnChangeHandler } from "../../../types/ref";
 
 export default function setHandler(
@@ -8,10 +8,9 @@ export default function setHandler(
   value: any,
   onChange: OnChangeHandler,
 ) {
-  const rawKey = tryToGetRaw(key);
-  const rawValue = tryToGetRaw(value);
+  const rawKey = getRawTry(key);
+  const rawValue = getRawTry(value);
   const prevValue = target.get(rawKey);
-
   if (!Object.is(rawValue, prevValue)) {
     target.set(rawKey, rawValue);
     onChange({
@@ -22,6 +21,5 @@ export default function setHandler(
       prevValue,
     });
   }
-
   return proxy;
 }

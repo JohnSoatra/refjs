@@ -1,4 +1,4 @@
-import { getWeakValue, tryToGetRaw } from "../../utils";
+import { getWeakValue, getRawTry } from "../../utils";
 import { OnChangeHandler } from "../../../types/ref";
 
 export default function deleteHandler(
@@ -7,10 +7,9 @@ export default function deleteHandler(
   key: any,
   onChange: OnChangeHandler,
 ) {
-  const rawKey = tryToGetRaw(key);
+  const rawKey = getRawTry(key);
   const prevValue = getWeakValue(target, rawKey);
   const deleted = target.delete(rawKey);
-
   if (deleted) {
     onChange({
       target: proxy,
@@ -20,6 +19,5 @@ export default function deleteHandler(
       prevValue
     });
   }
-
   return deleted;
 }

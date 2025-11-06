@@ -1,8 +1,21 @@
 import createProxy from "./createProxy";
 import Keys from "../constants/keys";
 import Symbols from "../constants/symbols";
+import IterationArrayMethods from "../constants/iterationMethods/array";
+import IterationTypedArrayMethods from "../constants/iterationMethods/typeArray";
+import IterationMapMethods from "../constants/iterationMethods/map";
+import IterationSetMethods from "../constants/iterationMethods/set";
+import IteratorMethods from "../constants/iteratorMethods";
+import LookupArrayMethods from "../constants/lookupMethods/array";
+import LookupTypedArrayMethods from "../constants/lookupMethods/typedArray";
+import MutationArrayMethods from "../constants/mutationMethods/array";
+import MutationTypedArrayMethods from "../constants/mutationMethods/typedArray";
 
-export function creatable(value: any) {
+export function isForbiddenKey(key: string | symbol) {
+  return typeof key === 'string' && Keys.ForbiddenKeys.includes(key);
+}
+
+export function isCreatable(value: any) {
   return typeof value === 'object' && value !== null;
 }
 
@@ -18,12 +31,50 @@ export function isProxy(value: object): boolean {
   return (value as any)[Symbols.IsProxy] ?? false;
 }
 
-export function getRaw(proxy: object): object | undefined {
-  return (proxy as any)[Symbols.RawObject];
+export function isMapCollection(target: object) {
+  return target instanceof Map || target instanceof WeakMap;
 }
 
-export function forbiddenKey(key: string | symbol) {
-  return typeof key === 'string' && Keys.ForbiddenKeys.includes(key);
+export function isSetCollection(target: object) {
+  return target instanceof Set || target instanceof WeakSet;
+}
+
+export function isCollection(target: object) {
+  return isMapCollection(target) || isSetCollection(target);
+}
+
+export function isIterationMethod(target: object, key: any) {
+  return (
+    (Array.isArray(target) && IterationArrayMethods.includes(key)) ||
+    (isTypedArray(target) && IterationTypedArrayMethods.includes(key)) ||
+    (target instanceof Map && IterationMapMethods.includes(key)) ||
+    (target instanceof Set && IterationSetMethods.includes(key))
+  );
+}
+
+export function isIteratorMethod(target: object, key: any) {
+  return (
+    (isArray(target) || target instanceof Map || target instanceof Set) &&
+    IteratorMethods.includes(key)
+  );
+}
+
+export function isLookupMethod(target: object, key: any) {
+  return (
+    (Array.isArray(target) && LookupArrayMethods.includes(key)) ||
+    (isTypedArray(target) && LookupTypedArrayMethods.includes(key))
+  );
+}
+
+export function isMutationMethod(target: object, key: any) {
+  return (
+    (Array.isArray(target) && MutationArrayMethods.includes(key)) ||
+    (isTypedArray(target) && MutationTypedArrayMethods.includes(key))
+  );
+}
+
+export function getRaw(proxy: object): object | undefined {
+  return (proxy as any)[Symbols.RawObject];
 }
 
 export function shallowArray<T>(value: T): T {
@@ -60,16 +111,16 @@ export function getNow() {
   return Date.now();
 }
 
-export function tryToGetRaw(value: any) {
-  if (creatable(value) && isProxy(value)) {
+export function getRawTry(value: any) {
+  if (isCreatable(value) && isProxy(value)) {
     return getRaw(value);
   }
   return value;
 }
 
-export function tryToCreateProxy(...args: Parameters<typeof createProxy>) {
+export function createProxyTry(...args: Parameters<typeof createProxy>) {
   const value = args[0];
-  if (creatable(value)) {
+  if (isCreatable(value)) {
     return createProxy(...args);
   }
   return value;
