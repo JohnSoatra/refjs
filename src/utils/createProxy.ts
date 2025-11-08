@@ -19,6 +19,21 @@ import {
 import { CacheProxy } from "../types/createProxy";
 import { OnChangeHandler } from "../types/ref";
 
+/**
+ * Recursively creates a reactive Proxy around an object, array, or collection.
+ *
+ * Features:
+ * - Reuses cached proxies to maintain reference consistency.
+ * - Automatically packs specialized handlers for arrays, maps, and sets.
+ * - Triggers `onChange` when properties or collections are mutated.
+ * - Safely skips forbidden or internal keys (like Symbols.RawObject).
+ *
+ * @param content Target object or collection to proxy.
+ * @param cache WeakMap used to store raw-to-proxy mappings for identity preservation.
+ * @param onChange Callback triggered when reactive mutations occur.
+ * @param saveProxy Whether to store the proxy in cache (defaults to true).
+ * @returns A reactive Proxy wrapping the original content.
+ */
 export default function createProxy<T extends Record<string, any>>(
   content: T,
   cache: CacheProxy,

@@ -35,6 +35,9 @@ function ref<T>(initial: T, onchange?: OnChangeHandler): Ref<T>;
  *   - `maxTick`: maximum number of updates allowed per frame.
  *   - `maxTickMessage`: message displayed when maxTick is exceeded.
  *
+ * Note: if you pass a custom `cache`, ensure it was created with `WeakMap<object, object>`.
+ * Passing a non-WeakMap or mismatched cache may cause inconsistent reactivity.
+ *
  * Example usage:
  * ```ts
  * const count = ref(0, { maxTick: 100, maxTickMessage: 'Too many updates', onchange: (e) => console.log(e) });
@@ -65,7 +68,7 @@ function ref<T>(initial: T, options?: RefOptions): Ref<T>;
 function ref<T = undefined>(): Ref<T | undefined>;
 function ref<T>(initial?: T, onchangeOrOptions?: OnChangeHandler | RefOptions): Ref<T | undefined> {
   const options = createOptions(onchangeOrOptions);
-  const cache = options.cache ? options.cache : new WeakMap();
+  const cache = options.cache ?? new WeakMap();
   const ticks: Ticks = {
     latest: getNow(),
     tick: 0,

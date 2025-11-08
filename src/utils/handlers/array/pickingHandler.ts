@@ -4,6 +4,20 @@ import { PickingArrayMethods } from "../../../constants/pickingMethods/array";
 import { CacheProxy } from "../../../types/createProxy";
 import { OnChangeHandler } from "../../../types/ref";
 
+/**
+ * Handles "picking" methods on arrays, such as `at`, `find`, and `findLast`.
+ *
+ * - Unwraps proxied arguments before calling the native method.
+ * - Proxies returned objects if necessary.
+ * - Returns `undefined` or the proxied result.
+ *
+ * @param target The target array.
+ * @param key The picking method name.
+ * @param cache WeakMap cache for proxies.
+ * @param onChange Callback triggered when nested proxies are accessed.
+ * @param args Arguments for the picking method.
+ * @returns The proxied value returned by the picking method.
+ */
 function pickingArrayHandler(
   target: any[],
   key: PickingArrayMethods,

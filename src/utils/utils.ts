@@ -128,7 +128,7 @@ export function createOptions(onchangeOrOptions: OnChangeHandler | RefOptions | 
     if (typeof onchangeOrOptions === 'function') {
       options.onchange = onchangeOrOptions;
     } else {
-      options = onchangeOrOptions;
+      options = { ...onchangeOrOptions };
     }
   }
   return options;
@@ -149,6 +149,10 @@ export function toProxiedItems(array: any[], cache: CacheProxy, onChange: OnChan
   return array.map(each => createProxyTry(each, cache, onChange, false));
 }
 
+/**
+ * Wraps callback functions passed to array/map/set iteration methods
+ * to ensure reactive proxy values are passed to the original callback.
+ */
 export function createCallbackArgs(cache: CacheProxy, onChange: OnChangeHandler, ...args: any[]) {
   const [callbackFn, ...restArgs] = args;
   function callback(this: any, ...callbackArgs: any[]) {

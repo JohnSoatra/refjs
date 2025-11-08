@@ -13,6 +13,19 @@ import { CacheProxy } from "../types/createProxy";
 import { OnChangeHandler } from "../types/ref";
 import pickingArrayHandler from "./handlers/array/pickingHandler";
 
+/**
+ * Packs and binds all handler functions with shared context.
+ *
+ * Each handler receives the `target`, `key`, `cache`, and `onChange` references,
+ * ensuring consistent behavior across mutation, lookup, and iteration operations.
+ *
+ * @param proxy The proxy instance of the target.
+ * @param target The raw target object being proxied.
+ * @param key The property key currently being accessed.
+ * @param cache WeakMap used for proxy–raw mapping to maintain identity.
+ * @param onChange Callback invoked when a reactive change occurs.
+ * @returns An object containing all pre-bound handler functions.
+ */
 export default function packHandlers(
   proxy: any,
   target: any,

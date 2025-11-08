@@ -10,6 +10,22 @@ type MutationKey<T> = T extends any[] ?
   MutationArrayMethods :
   MutationTypedArrayMethods;
 
+/**
+* Handles mutation methods on arrays or typed arrays.
+*
+* Supports `push`, `pop`, `shift`, `splice`, `sort`, `fill`, `copyWithin`, etc.
+* - Ensures arguments are unwrapped from proxies.
+* - Proxies returned items for methods like `splice`, `pop`, `shift`.
+* - Triggers `onChange` after mutation.
+*
+* @param proxy The reactive proxy object wrapping the target.
+* @param target The target array or typed array being mutated.
+* @param key The mutation method name.
+* @param cache WeakMap cache for proxies.
+* @param onChange Callback triggered after mutation.
+* @param args Arguments for the mutation method.
+* @returns The result of the mutation, or the proxy itself if mutated in-place.
+*/
 function mutationArrayHandler<T extends any[] | TypedArray>(
   proxy: any,
   target: T,
