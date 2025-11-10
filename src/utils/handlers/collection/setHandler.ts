@@ -5,17 +5,19 @@ import { OnChangeHandler } from "../../../types/ref";
 /**
  * Sets a key-value pair in a Map or WeakMap with reactive tracking.
  *
- * - Unwraps the key and value if they are proxied objects.
- * - Triggers `onChange` if the value changes.
- * - Cleans up the previous value from the cache if applicable.
+ * Behavior:
+ * - Converts proxied key and value to their raw counterparts.
+ * - Only triggers `onChange` if the new value differs from the previous value.
+ * - Removes any cached proxy associated with the previous value to prevent memory leaks.
+ * - Returns the proxy for chaining.
  *
- * @param proxy The proxied object for change tracking.
+ * @param proxy The reactive proxy object for change tracking.
  * @param target The Map or WeakMap to update.
- * @param key The key to set.
- * @param value The value to associate with the key.
- * @param cache The WeakMap cache storing raw-to-proxy mappings.
+ * @param key The key to set (can be proxied).
+ * @param value The value to associate with the key (can be proxied).
+ * @param cache WeakMap cache storing raw-to-proxy mappings.
  * @param onChange Callback triggered on change events.
- * @returns The proxied object for chaining.
+ * @returns The proxy object.
  */
 export default function setHandler(
   proxy: any,

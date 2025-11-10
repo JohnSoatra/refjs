@@ -20,6 +20,7 @@ import {
   isForbiddenKey,
   removeCacheTry,
   isTypedArray,
+  isStrongCollection,
 } from "./utils";
 import { CacheProxy } from "../types/createProxy";
 import { OnChangeHandler } from "../types/ref";
@@ -93,11 +94,9 @@ export default function createProxy<T extends Record<string, any>>(
         ) {
           return handlers.iterationHandler;
         }
-        if (
-          (target instanceof Map || target instanceof Set) &&
-          IteratorMethods.has(key)
-        ) {
-          return handlers.iteratorHandler;
+        if (isStrongCollection(target)) {
+          if (key === Keys.Clear) return handlers.clearHandler;
+          if (IteratorMethods.has(key)) return handlers.iteratorHandler;
         }
         if (isCollection(target)) {
           if (key === Keys.Has) return handlers.hasHandler;

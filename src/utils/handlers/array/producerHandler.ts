@@ -5,18 +5,20 @@ import { OnChangeHandler } from "../../../types/ref";
 
 /**
  * Handles "producer" methods on arrays, such as `concat`, `slice`, `flat`,
- * `splice`, and the newer immutable methods like `toSorted`, `toReversed`, `toSpliced`, `with`.
+ * `splice`, and newer immutable methods like `toSorted`, `toReversed`, `toSpliced`, `with`.
  *
- * - Unwraps proxied arguments before calling the native method.
- * - Proxies returned arrays or objects.
- * - Does not mutate the original array for immutable methods.
+ * Behavior:
+ * - Converts proxied arguments to raw values to prevent double-proxy issues.
+ * - Wraps returned arrays/items in proxies for reactive tracking.
+ * - Original array is **not mutated** for immutable producer methods.
+ * - `splice` still mutates the original array but the returned removed items are proxied.
  *
  * @param target The target array.
  * @param key The producer method name.
  * @param cache WeakMap cache for proxies.
  * @param onChange Callback triggered when nested proxies are accessed.
  * @param args Arguments for the producer method.
- * @returns The proxied array returned by the producer method.
+ * @returns The proxied array or items returned by the producer method.
  */
 function producerArrayHandler(
   target: any[],

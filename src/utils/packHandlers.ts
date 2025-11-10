@@ -5,6 +5,7 @@ import deleteHandler from "./handlers/collection/deleteHandler";
 import getHandler from "./handlers/collection/getHandler";
 import hasHandler from "./handlers/collection/hasHandler";
 import setHandler from "./handlers/collection/setHandler";
+import clearHandler from "./handlers/collection/clearHandler";
 import defaultHandler from "./handlers/defaultHandler";
 import iterationHandler from "./handlers/iterationHandler";
 import iteratorHandler from "./handlers/iteratorHandler";
@@ -47,6 +48,7 @@ export default function packHandlers(
     addHandler: (addValue: any) => addHandler(proxy, target, addValue, onChange),
     hasHandler: (hasKey: any) => hasHandler(target, hasKey),
     deleteHandler: (deleteKey: any) => deleteHandler(proxy, target, deleteKey, cache, onChange),
-    defaultHandler: (...args: any[]) => defaultHandler(proxy, target, key, ...args),
+    clearHandler: () => clearHandler(proxy, target, cache, onChange),
+    defaultHandler: (...args: any[]) => defaultHandler(proxy, target, key, cache, onChange, ...args),
   }
 }

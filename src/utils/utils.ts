@@ -32,6 +32,10 @@ export function isSetCollection(target: object) {
   return target instanceof Set || target instanceof WeakSet;
 }
 
+export function isStrongCollection(target: object) {
+  return target instanceof Map || target instanceof Set;
+}
+
 export function isCollection(target: object) {
   return isMapCollection(target) || isSetCollection(target);
 }
@@ -114,11 +118,13 @@ export function toProxiedItems(array: any[], cache: CacheProxy, onChange: OnChan
 export function createCallbackArgs(cache: CacheProxy, onChange: OnChangeHandler, ...args: any[]) {
   if (args.length > 0) {
     const [callbackFn, ...restArgs] = args;
-    function callback(this: any, ...callbackArgs: any[]) {
-      const proxiedArgs = callbackArgs.map(arg => createProxyTry(arg, cache, onChange));
-      return callbackFn.apply(this, proxiedArgs);
+    if (typeof callbackFn === 'function') {
+      function callback(this: any, ...callbackArgs: any[]) {
+        const proxiedArgs = callbackArgs.map(arg => createProxyTry(arg, cache, onChange));
+        return callbackFn.apply(this, proxiedArgs);
+      }
+      return [callback, ...restArgs];
     }
-    return [callback, ...restArgs];
   }
   return args;
 }
@@ -136,4 +142,11 @@ export function createProxiedIterator(iterator: Iterator<any>, cache: CacheProxy
       return this;
     }
   }
+}
+
+export function proxiedFunc(func: Function, proxy: any, cache: CacheProxy, onChange: OnChangeHandler) {
+  return function (...args: any[]) {
+    const result = func.apply(proxy, args);
+    return createProxyTry(result, cache, onChange, false);
+  };
 }

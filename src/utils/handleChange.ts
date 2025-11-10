@@ -2,17 +2,6 @@ import Max from "../constants/max";
 import { getNow, nextFrame } from "./utils";
 import { Ticks, ChangeEvent, RefOptions } from "../types/ref";
 
-/**
- * Handles reactive change events and throttles update frequency.
- *
- * - Prevents excessive updates using `maxTick` per frame.
- * - Schedules the `onchange` callback asynchronously via `nextFrame`.
- * - Logs a warning if updates exceed the allowed limit.
- *
- * @param event Change event triggered by proxy mutation.
- * @param ticks Internal frame tick tracker.
- * @param options Ref configuration including onchange handler and maxTick settings.
- */
 function maxTick(options: RefOptions) {
   return (
     (options.maxTick && options.maxTick <= Max.LimitTick) ?
@@ -28,6 +17,18 @@ function maxTickMessage(options: RefOptions) {
     `Consider optimizing your state mutations or throttling updates.`
   );
 }
+
+/**
+ * Handles reactive change events and throttles update frequency.
+ *
+ * - Prevents excessive updates using `maxTick` per frame.
+ * - Schedules the `onchange` callback asynchronously via `nextFrame`.
+ * - Logs a warning if updates exceed the allowed limit.
+ *
+ * @param event Change event triggered by proxy mutation.
+ * @param ticks Internal frame tick tracker.
+ * @param options Ref configuration including onchange handler and maxTick settings.
+ */
 export default function handleChange(
   event: ChangeEvent,
   ticks: Ticks,

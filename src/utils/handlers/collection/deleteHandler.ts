@@ -5,9 +5,11 @@ import { OnChangeHandler } from "../../../types/ref";
 /**
  * Handles deleting a key/value from Map, Set, WeakMap, or WeakSet.
  *
- * - Unwraps the key if it is proxied.
- * - Removes cached proxies related to the key and, for Map, the value.
- * - Triggers the `onChange` callback if deletion succeeds.
+ * Behavior:
+ * - Converts proxied keys to their raw versions to maintain correct identity.
+ * - For Map/WeakMap, also retrieves the previous value via `getWeakValue`.
+ * - Removes any cached proxies for the deleted key and, if applicable, the value.
+ * - Triggers `onChange` only if deletion actually occurs.
  *
  * @param proxy The proxied collection.
  * @param target The original collection (Map, Set, WeakMap, WeakSet).

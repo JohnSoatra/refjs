@@ -3,6 +3,19 @@ import { ConflictArrayMethods } from "../../../constants/conflictMethods/array";
 import { CacheProxy } from "../../../types/createProxy";
 import { OnChangeHandler } from "../../../types/ref";
 
+/**
+ * Handles array methods that have multiple behaviors (iteration, mutation, picking, or producing arrays)
+ * in reactive proxied arrays. These "conflict methods" include:
+ * 
+ * - filter, toSorted  : iteration + producer → return new proxied array
+ * - find, findLast    : iteration + picking  → return single proxied item
+ * - sort              : iteration + mutation → mutates in place, triggers onChange
+ * - pop, shift        : mutation + picking  → remove item, return as proxied value
+ * - splice            : mutation + producer → remove/replace items, return removed items as proxied array
+ * 
+ * This handler ensures that the returned values maintain reactivity and properly trigger the
+ * onChange callback when mutations occur.
+ */
 function conflictArrayHandler(
   proxy: any,
   target: any[],

@@ -3,7 +3,10 @@ import { getRawTry } from "../../utils";
 /**
  * Checks whether a key exists in a Map, Set, WeakMap, or WeakSet.
  *
- * - Unwraps the key if it is a proxied object.
+ * Behavior:
+ * - Converts a proxied key to its raw value to ensure proper lookup.
+ * - Works with all supported collections: Map, Set, WeakMap, WeakSet.
+ * - Returns a boolean indicating presence.
  *
  * @param target The collection to check.
  * @param key The key or value to look for.

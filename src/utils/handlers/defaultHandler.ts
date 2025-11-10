@@ -1,24 +1,38 @@
+import { proxiedFunc } from "../utils";
+import { CacheProxy } from "../../types/createProxy";
+import { OnChangeHandler } from "../../types/ref";
+
 /**
  * Default handler for method calls or property accesses that do not have
  * a specialized reactive handler.
  *
- * - Calls the original method on the target with provided arguments.
- * - Returns the proxy itself if the method returns the target (common in
- *   mutable array methods like `reverse` or `sort`) to maintain chainability.
- * - Otherwise, returns the method's actual result.
+ * Behavior:
+ * - Wraps the original method using `proxiedFunc` to ensure returned values
+ *   are properly proxied if they are objects/arrays.
+ * - For mutable methods (e.g., Array.reverse, Array.sort) that return
+ *   the original array, the proxy is returned from cache to maintain
+ *   reference consistency.
+ * - For methods returning new objects/arrays (e.g., Array.slice), a new
+ *   proxy is created for the result, preserving reactivity.
+ * - Primitives are returned as-is.
  *
- * @param proxy The proxied object for reactive tracking.
+ * @param proxy The reactive proxy wrapping the target.
  * @param target The original target object.
  * @param key The property or method key being accessed.
+ * @param cache WeakMap used to store raw-to-proxy mappings for identity preservation.
+ * @param onChange Callback triggered for reactive mutations.
  * @param args Arguments to pass to the method.
- * @returns Either the proxy (for chainable methods) or the original result.
+ * @returns Either a reactive proxy or the primitive result.
  */
 export default function defaultHandler(
   proxy: any,
   target: any,
   key: any,
+  cache: CacheProxy,
+  onChange: OnChangeHandler,
   ...args: any[]
 ) {
-  const result = target[key](...args);
-  return result === target ? proxy : result;
+  // Wraps the original function so that its result is always proxied if necessary
+  const func = proxiedFunc(target[key], proxy, cache, onChange);
+  return func(...args);
 }
