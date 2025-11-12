@@ -21,7 +21,6 @@ import {
   removeCacheTry,
   isTypedArray,
   isStrongCollection,
-  isFlagKey,
   hasFlag,
 } from "./utils";
 import { CacheProxy } from "../types/createProxy";
@@ -116,9 +115,9 @@ export default function createProxy<T extends Record<string, any>>(
         fromSetTrap = true;
         const updated = Reflect.set(target, key, newValue, receiver);
         fromSetTrap = false;
-        if (!(isFlagKey(key) || hasFlag(proxy, 'batch')) && updated) {
+        if (updated) {
           removeCacheTry(prevValue, cache);
-          onChange({
+          !hasFlag(target, 'batch') && onChange({
             target: proxy,
             action: 'set',
             key,
@@ -136,9 +135,9 @@ export default function createProxy<T extends Record<string, any>>(
       if (hasKey) {
         const prevValue = target[key];
         const deleted = Reflect.deleteProperty(target, key);
-        if (!(isFlagKey(key) || hasFlag(proxy, 'batch')) && deleted) {
+        if (deleted) {
           removeCacheTry(prevValue, cache);
-          onChange({
+          !hasFlag(target, 'batch') && onChange({
             target: proxy,
             action: 'delete',
             key,
@@ -154,12 +153,12 @@ export default function createProxy<T extends Record<string, any>>(
       if (isForbiddenKey(key)) return true;
       const prevValue = target[key];
       const defined = Reflect.defineProperty(target, key, attributes);
-      if (!(isFlagKey(key) || hasFlag(proxy, 'batch') || fromSetTrap) && defined) {
+      if (!fromSetTrap && defined) {
         const newValue = attributes.value;
         if (!Object.is(prevValue, newValue)) {
           removeCacheTry(prevValue, cache);
         }
-        onChange({
+        !hasFlag(target, 'batch') && onChange({
           target: proxy,
           action: 'define',
           key,
