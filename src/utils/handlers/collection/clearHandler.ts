@@ -1,4 +1,4 @@
-import { getRawTry, hasFlag, isMapCollection, removeCacheTry } from "../../utils";
+import { isMapCollection, removeCacheTry } from "../../utils";
 import { CacheProxy } from "../../../types/createProxy";
 import { OnChangeHandler } from "../../../types/ref";
 

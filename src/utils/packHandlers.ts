@@ -12,7 +12,7 @@ import iteratorHandler from "./handlers/iteratorHandler";
 import producerArrayHandler from "./handlers/array/producerHandler";
 import pickingArrayHandler from "./handlers/array/pickingHandler";
 import conflictArrayHandler from "./handlers/array/conflictHandler";
-import { addFlag, getRawTry, isObject, isPlainObject, isProxy, removeFlag } from "./utils";
+import { getRawTry, isObject, isPlainObject, isProxy } from "./utils";
 import { CacheProxy } from "../types/createProxy";
 import { OnChangeHandler } from "../types/ref";
 
@@ -28,7 +28,7 @@ function passThis<
     const rawThis = getRawTry(this);
     const [target] = params;
     let thisArg: any;
-    if (isPlainObject(target) || Array.isArray(target)) {
+    if (isPlainObject(target)) {
       thisArg = this;
     } else {
       thisArg = rawThis;

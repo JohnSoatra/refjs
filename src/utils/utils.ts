@@ -1,6 +1,5 @@
 import Keys from "../constants/keys";
 import Symbols from "../constants/symbols";
-import Flags, { Flags as FlagKey } from "../constants/flags";
 import createProxy from "./createProxy";
 import { CacheProxy } from "../types/createProxy";
 import { OnChangeHandler } from "../types/ref";
@@ -114,28 +113,6 @@ export function createProxiedIterator(iterator: Iterator<any>, cache: CacheProxy
     [Symbol.iterator]() {
       return this;
     }
-  }
-}
-
-export function hasFlag(target: any, flag: FlagKey): boolean {
-  if (isObject(target)) {
-    const rawTarget = isProxy(target) ? getRaw(target) : target;
-    return rawTarget[Flags.get(flag)!] ?? false;
-  }
-  return false;
-}
-
-export function addFlag(target: any, flag: FlagKey) {
-  if (isObject(target)) {
-    const rawTarget = isProxy(target) ? getRaw(target) : target;
-    rawTarget[Flags.get(flag)!] = true;
-  }
-}
-
-export function removeFlag(target: any, flag: FlagKey) {
-  if (isObject(target)) {
-    const rawTarget = isProxy(target) ? getRaw(target) : target;
-    delete rawTarget[Flags.get(flag)!];
   }
 }
 

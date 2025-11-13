@@ -20,8 +20,7 @@ import {
   isForbiddenKey,
   removeCacheTry,
   isTypedArray,
-  isStrongCollection,
-  hasFlag,
+  isStrongCollection
 } from "./utils";
 import { CacheProxy } from "../types/createProxy";
 import { OnChangeHandler } from "../types/ref";
@@ -117,7 +116,7 @@ export default function createProxy<T extends Record<string, any>>(
         fromSetTrap = false;
         if (updated) {
           removeCacheTry(prevValue, cache);
-          !hasFlag(target, 'batch') && onChange({
+          onChange({
             target: proxy,
             action: 'set',
             key,
@@ -137,7 +136,7 @@ export default function createProxy<T extends Record<string, any>>(
         const deleted = Reflect.deleteProperty(target, key);
         if (deleted) {
           removeCacheTry(prevValue, cache);
-          !hasFlag(target, 'batch') && onChange({
+          onChange({
             target: proxy,
             action: 'delete',
             key,
@@ -158,7 +157,7 @@ export default function createProxy<T extends Record<string, any>>(
         if (!Object.is(prevValue, newValue)) {
           removeCacheTry(prevValue, cache);
         }
-        !hasFlag(target, 'batch') && onChange({
+        onChange({
           target: proxy,
           action: 'define',
           key,

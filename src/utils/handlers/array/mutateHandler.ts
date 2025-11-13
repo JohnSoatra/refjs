@@ -1,4 +1,4 @@
-import { addFlag, hasFlag, removeFlag, toRawArgs } from "../../utils";
+import { toRawArgs } from "../../utils";
 import { MutationArrayMethods } from "../../../constants/mutationMethods/array";
 import { MutationTypedArrayMethods } from "../../../constants/mutationMethods/typedArray";
 import { TypedArray } from "../../../types/types";
@@ -25,9 +25,7 @@ export default function mutationArrayHandler<T extends any[] | TypedArray>(
   ...args: any[]
 ) {
   const rawArgs = toRawArgs(args);
-  addFlag(this, 'batch');
   const value = (target as any)[key].apply(this, rawArgs);
-  removeFlag(this, 'batch');
   cache.has(this) && onChange({
     target: this,
     action: key,

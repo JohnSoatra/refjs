@@ -1,4 +1,4 @@
-import { getWeakValue, getRawTry, removeCacheTry, isMapCollection, hasFlag } from "../../utils";
+import { getWeakValue, getRawTry, removeCacheTry, isMapCollection } from "../../utils";
 import { CacheProxy } from "../../../types/createProxy";
 import { OnChangeHandler } from "../../../types/ref";
 

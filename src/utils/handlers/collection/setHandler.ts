@@ -1,4 +1,4 @@
-import { removeCacheTry, getRawTry, hasFlag } from "../../utils";
+import { removeCacheTry, getRawTry } from "../../utils";
 import { CacheProxy } from "../../../types/createProxy";
 import { OnChangeHandler } from "../../../types/ref";
 
