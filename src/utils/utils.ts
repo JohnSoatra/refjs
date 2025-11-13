@@ -9,7 +9,7 @@ export function isForbiddenKey(key: any) {
   return Keys.ForbiddenKeys.has(key);
 }
 
-export function isCreatable(value: any) {
+export function isObject(value: any) {
   return typeof value === 'object' && value !== null;
 }
 
@@ -55,7 +55,7 @@ export function getWeakValue(target: WeakMap<any, any> | WeakSet<any>, key: any)
 }
 
 export function getRawTry(value: any) {
-  if (isCreatable(value) && isProxy(value)) {
+  if (isObject(value) && isProxy(value)) {
     return getRaw(value);
   }
   return value;
@@ -63,14 +63,14 @@ export function getRawTry(value: any) {
 
 export function createProxyTry(...args: Parameters<typeof createProxy>) {
   const [value] = args;
-  if (isCreatable(value)) {
+  if (isObject(value)) {
     return createProxy(...args);
   }
   return value;
 }
 
 export function removeCacheTry(value: any, cache: CacheProxy) {
-  if (isCreatable(value)) {
+  if (isObject(value)) {
     return cache.delete(value);
   }
   return false;
@@ -124,22 +124,25 @@ export function isFlagKey(key: any) {
   return false;
 }
 
-export function hasFlag(value: any, flag: FlagKey): boolean {
-  if (isCreatable(value) && isProxy(value)) {
-    return value[Flags.get(flag)!] ?? false;
+export function hasFlag(target: any, flag: FlagKey): boolean {
+  if (isObject(target)) {
+    const rawTarget = isProxy(target) ? getRaw(target) : target;
+    return rawTarget[Flags.get(flag)!] ?? false;
   }
   return false;
 }
 
-export function addFlag(value: any, flag: FlagKey) {
-  if (isCreatable(value) && isProxy(value)) {
-    value[Flags.get(flag)!] = true;
+export function addFlag(target: any, flag: FlagKey) {
+  if (isObject(target)) {
+    const rawTarget = isProxy(target) ? getRaw(target) : target;
+    rawTarget[Flags.get(flag)!] = true;
   }
 }
 
-export function removeFlag(value: any, flag: FlagKey) {
-  if (isCreatable(value) && isProxy(value)) {
-    delete value[Flags.get(flag)!];
+export function removeFlag(target: any, flag: FlagKey) {
+  if (isObject(target)) {
+    const rawTarget = isProxy(target) ? getRaw(target) : target;
+    delete rawTarget[Flags.get(flag)!];
   }
 }
 
@@ -149,9 +152,9 @@ export function isPlainObject(value: any): boolean {
   return proto === Object.prototype || !!value.constructor;
 }
 
-export function passThis<T extends ((...args: any[]) => any)>(
+export function passThis<T extends ((...params: P) => any), P extends ([target: any, ...args: any[]])>(
   handler: T,
-  ...params: Parameters<T>
+  ...params: P
 ) {
   return function (this: any, ...args: any[]) {
     const [target] = params;
@@ -161,6 +164,6 @@ export function passThis<T extends ((...args: any[]) => any)>(
     } else {
       thisArg = getRawTry(this);
     }
-    handler.apply(thisArg, params.concat(args));
+    return (handler as any).apply(thisArg, params.concat(args));
   }
 }
