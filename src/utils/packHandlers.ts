@@ -12,16 +12,16 @@ import iteratorHandler from "./handlers/iteratorHandler";
 import producerArrayHandler from "./handlers/array/producerHandler";
 import pickingArrayHandler from "./handlers/array/pickingHandler";
 import conflictArrayHandler from "./handlers/array/conflictHandler";
-import { addFlag, getRawTry, isCreatable, isPlainObject, isProxy, removeFlag } from "./utils";
+import { addFlag, getRawTry, isObject, isPlainObject, isProxy, removeFlag } from "./utils";
 import { CacheProxy } from "../types/createProxy";
 import { OnChangeHandler } from "../types/ref";
 
-function passThis<T extends ((...args: any[]) => any)>(
-  handler: T,
-  ...params: Parameters<T>
-) {
+function passThis<
+  P extends ([target: any, ...args: any[]]),
+  T extends ((...params: P) => any),
+>(handler: T, ...params: P) {
   return function (this: any, ...args: any[]) {
-    const thisIsProxy = isCreatable(this) && isProxy(this);
+    const thisIsProxy = isObject(this) && isProxy(this);
     const [target] = params;
     let thisArg: any;
     if (isPlainObject(target) || Array.isArray(target)) {
@@ -30,7 +30,7 @@ function passThis<T extends ((...args: any[]) => any)>(
       thisArg = getRawTry(this);
     }
     thisIsProxy && addFlag(thisArg, 'is_proxy');
-    const result = handler.apply(thisArg, params.concat(args));
+    const result = handler.apply(thisArg, params.concat(args) as P);
     thisIsProxy && removeFlag(thisArg, 'is_proxy');
     return result;
   }
