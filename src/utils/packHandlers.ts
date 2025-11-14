@@ -12,7 +12,7 @@ import iteratorHandler from "./handlers/iteratorHandler";
 import producerArrayHandler from "./handlers/array/producerHandler";
 import pickingArrayHandler from "./handlers/array/pickingHandler";
 import conflictArrayHandler from "./handlers/array/conflictHandler";
-import { getRawTry, isObject, isPlainObject, isProxy } from "./utils";
+import { checkCache, getRawTry, isPlainObject } from "./utils";
 import { CacheProxy } from "../types/createProxy";
 import { OnChangeHandler } from "../types/ref";
 
@@ -33,9 +33,7 @@ function passThis<
     } else {
       thisArg = rawThis;
     }
-    if (isObject(this) && isProxy(this)) {
-      cache.set(rawThis, this);
-    }
+    checkCache(this, cache);
     return handler.apply(thisArg, params.concat(args) as P);
   }
 }

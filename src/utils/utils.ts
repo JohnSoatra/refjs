@@ -40,7 +40,7 @@ export function isCollection(target: object) {
   return isMapCollection(target) || isSetCollection(target);
 }
 
-export function getRaw(proxy: object): object | undefined {
+export function getRaw(proxy: object): object {
   return (proxy as any)[Symbols.RawObject];
 }
 
@@ -101,23 +101,37 @@ export function createCallbackArgs(cache: CacheProxy, onChange: OnChangeHandler,
   return args;
 }
 
+export function checkCache(value: any, cache: CacheProxy) {
+  if (isObject(value) && isProxy(value)) {
+    cache.set(getRaw(value), value);
+  }
+}
+
 export function createProxiedIterator(iterator: Iterator<any>, cache: CacheProxy, onChange: OnChangeHandler) {
-  return {
+  const proxiedIterator = {
     next(this: any, value?: any) {
-      const result = iterator.next.call(this, value);
+      const rawThis = validateThis(this);
+      const result = iterator.next.call(rawThis, value);
       if (!result.done) {
         result.value = createProxyTry(result.value, cache, onChange);
       }
       return result;
     },
-    [Symbol.iterator]() {
-      return this;
+    [Symbol.iterator](this: any) {
+      const rawThis = validateThis(this);
+      return rawThis;
     }
   }
+  function validateThis(target: any) {
+    const validTarget = target === proxiedIterator ? iterator : target;
+    checkCache(validTarget, cache);
+    return getRawTry(validTarget);
+  }
+  return proxiedIterator;
 }
 
 export function isPlainObject(value: any): boolean {
   if (Object.prototype.toString.call(value) !== '[object Object]') return false;
-  const proto = Object.getPrototypeOf(value)
+  const proto = Object.getPrototypeOf(value);
   return proto === Object.prototype || !!value.constructor;
 }
