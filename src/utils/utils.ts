@@ -94,14 +94,14 @@ export function toProxiedItems(
   array: any[],
   parent: object | undefined,
   cache: CacheProxy,
-  cacheParent: CacheParentsProxy,
+  cacheParents: CacheParentsProxy,
   onChange: OnChangeHandler
 ) {
   return array.map(each => createProxyTry(
     each,
     parent,
     cache,
-    cacheParent,
+    cacheParents,
     onChange,
     false
   ));
@@ -114,7 +114,7 @@ export function toProxiedItems(
 export function createCallbackArgs(
   parent: object | undefined,
   cache: CacheProxy,
-  cacheParent: CacheParentsProxy,
+  cacheParents: CacheParentsProxy,
   onChange: OnChangeHandler,
   ...args: any[]
 ) {
@@ -126,7 +126,7 @@ export function createCallbackArgs(
           arg,
           parent,
           cache,
-          cacheParent,
+          cacheParents,
           onChange
         ));
         return callbackFn.apply(this, proxiedArgs);

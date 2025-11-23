@@ -27,7 +27,7 @@ export default function iterationHandler<T extends any[] | Map<any, any> | Set<a
   this: T,
   target: T,
   cache: CacheProxy,
-  cacheParent: CacheParentsProxy,
+  cacheParents: CacheParentsProxy,
   key: IterationKey<T>,
   onChange: OnChangeHandler,
   ...args: any[]
@@ -36,7 +36,7 @@ export default function iterationHandler<T extends any[] | Map<any, any> | Set<a
   const callbackArgs = proxy ? createCallbackArgs(
     proxy,
     cache,
-    cacheParent,
+    cacheParents,
     onChange,
     ...args
   ) : args;

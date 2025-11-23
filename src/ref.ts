@@ -16,17 +16,17 @@ import { OnChangeHandler, Ref, RefOptions } from './types/ref';
  *
  * @param initial Initial value.
  * @param onchange Callback that receives ChangeEvent on every change.
- * @param options Optional RefOptions (only `cache` is used by ref).
+  * @param options Optional RefOptions for proxy identity (`cache`) and parent tracking (`cacheParents`).
  * @returns A reactive Ref object.
  */
 function ref<T>(initial: T, onchange: OnChangeHandler, options?: RefOptions): Ref<T> {
   const cache = options?.cache ?? new WeakMap();
-  const cacheParent = options?.cacheParents ?? new WeakMap();
+  const cacheParents = options?.cacheParents ?? new WeakMap();
   return createProxy(
     Object.preventExtensions({ value: initial }),
     undefined,
     cache,
-    cacheParent,
+    cacheParents,
     onchange
   );
 }

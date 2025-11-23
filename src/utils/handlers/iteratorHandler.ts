@@ -8,7 +8,7 @@ export function createProxiedIterator<T extends any[] | Map<any, any> | Set<any>
   target: T,
   parent: object | undefined,
   cache: CacheProxy,
-  cacheParent: CacheParentsProxy,
+  cacheParents: CacheParentsProxy,
   key: IteratorMethods,
   onChange: OnChangeHandler,
 ): Iterator<any> & Iterable<any> {
@@ -29,7 +29,7 @@ export function createProxiedIterator<T extends any[] | Map<any, any> | Set<any>
               item,
               parent,
               cache,
-              cacheParent,
+              cacheParents,
               onChange
             );
           } else {
@@ -37,7 +37,7 @@ export function createProxiedIterator<T extends any[] | Map<any, any> | Set<any>
               each,
               parent,
               cache,
-              cacheParent,
+              cacheParents,
               onChange
             ));
           }
@@ -46,7 +46,7 @@ export function createProxiedIterator<T extends any[] | Map<any, any> | Set<any>
             result.value,
             parent,
             cache,
-            cacheParent,
+            cacheParents,
             onChange
           );
         }
@@ -74,7 +74,7 @@ export default function iteratorHandler<T extends any[] | Map<any, any> | Set<an
   this: T,
   target: T,
   cache: CacheProxy,
-  cacheParent: CacheParentsProxy,
+  cacheParents: CacheParentsProxy,
   key: IteratorMethods,
   onChange: OnChangeHandler,
 ) {
@@ -85,7 +85,7 @@ export default function iteratorHandler<T extends any[] | Map<any, any> | Set<an
     this,
     proxy,
     cache,
-    cacheParent,
+    cacheParents,
     key,
     onChange
   ) : iterator;

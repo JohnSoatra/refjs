@@ -15,7 +15,7 @@ export default function getHandler<T extends Map<any, any> | WeakMap<any, any>>(
   this: T,
   target: T,
   cache: CacheProxy,
-  cacheParent: CacheParentsProxy,
+  cacheParents: CacheParentsProxy,
   onChange: OnChangeHandler,
   ...args: any[]
 ) {
@@ -27,7 +27,7 @@ export default function getHandler<T extends Map<any, any> | WeakMap<any, any>>(
     value,
     proxy,
     cache,
-    cacheParent,
+    cacheParents,
     onChange
   ) : value;
 }

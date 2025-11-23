@@ -21,7 +21,7 @@ export default function conflictArrayHandler<T extends any[]>(
   this: T,
   target: T,
   cache: CacheProxy,
-  cacheParent: CacheParentsProxy,
+  cacheParents: CacheParentsProxy,
   key: ConflictArrayMethods,
   onChange: OnChangeHandler,
   ...args: any[]
@@ -38,7 +38,7 @@ export default function conflictArrayHandler<T extends any[]>(
       const callbackArgs = proxy ? createCallbackArgs(
         proxy,
         cache,
-        cacheParent,
+        cacheParents,
         onChange,
         ...args
       ) : args;
@@ -51,7 +51,7 @@ export default function conflictArrayHandler<T extends any[]>(
             value,
             proxy,
             cache,
-            cacheParent,
+            cacheParents,
             onChange
           ) : value;
         // picking methods
@@ -61,7 +61,7 @@ export default function conflictArrayHandler<T extends any[]>(
             value,
             proxy,
             cache,
-            cacheParent,
+            cacheParents,
             onChange
           ) : value;
         // mutation methods
@@ -96,7 +96,7 @@ export default function conflictArrayHandler<T extends any[]>(
             value,
             proxy,
             cache,
-            cacheParent,
+            cacheParents,
             onChange,
             false
           ) : value;
@@ -106,7 +106,7 @@ export default function conflictArrayHandler<T extends any[]>(
             value,
             proxy,
             cache,
-            cacheParent,
+            cacheParents,
             onChange
           ) : value;
       }

@@ -16,7 +16,7 @@ export default function producerArrayHandler<T extends any[]>(
   this: T,
   target: T,
   cache: CacheProxy,
-  cacheParent: CacheParentsProxy,
+  cacheParents: CacheParentsProxy,
   key: ProducerArrayMethods,
   onChange: OnChangeHandler,
   ...args: any[]
@@ -28,7 +28,7 @@ export default function producerArrayHandler<T extends any[]>(
     value,
     proxy,
     cache,
-    cacheParent,
+    cacheParents,
     onChange
   ) : value;
 }
