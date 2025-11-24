@@ -7,6 +7,5 @@ export {
 } from "./types/ref";
 export {
   getRawTry as getRaw,
-  isProxyTry as isRef,
-  getParentsTry as getParents,
+  isProxyTry as isTracked,
 } from './utils/utils';

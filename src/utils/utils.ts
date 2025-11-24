@@ -28,16 +28,18 @@ export function isProxy(value: object): boolean {
   return (value as any)[Symbols.IsProxy] ?? false;
 }
 
+/**
+ * Safely checks whether a value is a reactive proxy.
+ *
+ * - Returns `true` only if:
+ *    1. The value is proxiable (object, array, etc.),
+ *    2. And it is actually a proxy created by the reactive system.
+ *
+ * @param value Any value to test.
+ * @returns `true` if the value is a valid reactive proxy, otherwise `false`.
+ */
 export function isProxyTry(value: any) {
   return isProxiable(value) && isProxy(value);
-}
-
-export function getParents(value: object) {
-  return (value as any)[Symbols.Parents];
-}
-
-export function getParentsTry(value: any): Set<object> | undefined {
-  return isProxyTry(value) ? getParents(value) : undefined;
 }
 
 export function isMapCollection(target: object) {
@@ -69,6 +71,15 @@ export function getWeakValue(target: WeakMap<any, any> | WeakSet<any>, key: any)
   return undefined;
 }
 
+/**
+ * Safely retrieves the raw (unproxied) value.
+ *
+ * - If `value` is a proxy created by the reactive system, it returns its original raw target.
+ * - If `value` is not a proxy, it simply returns the input as-is.
+ * 
+ * @param value Any value that may or may not be a proxy.
+ * @returns The raw underlying value if proxied, otherwise the original value.
+ */
 export function getRawTry(value: any) {
   if (isProxyTry(value)) {
     return getRaw(value);
