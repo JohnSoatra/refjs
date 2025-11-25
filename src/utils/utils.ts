@@ -122,7 +122,9 @@ export function toProxiedItems(
  * Wraps callback functions passed to array/map/set iteration methods
  * to ensure reactive proxy values are passed to the original callback.
  */
-export function createCallbackArgs(
+export function createCallbackArgs<T extends any[] | Map<any ,any> | Set<any>>(
+  target: T,
+  parent: object | undefined,
   cache: CacheProxy,
   cacheParents: CacheParentsProxy,
   onChange: OnChangeHandler,
@@ -131,19 +133,48 @@ export function createCallbackArgs(
   const [callbackFn, ...restArgs] = args;
   if (typeof callbackFn === 'function') {
     function callback(this: any, ...callbackArgs: any[]) {
-      const proxiedArgs = callbackArgs.map(arg => createProxyTry(
-        arg,
-        undefined,
-        cache,
-        cacheParents,
-        onChange,
-        false,
-      ));
+      const proxiedArgs = callbackArgs.map(arg => {
+        const directParent = target === arg ? undefined : parent;
+        return createProxyTry(
+          arg,
+          directParent,
+          cache,
+          cacheParents,
+          onChange,
+          false,
+        );
+      });
       return callbackFn.apply(this, proxiedArgs);
     }
     return [callback, ...restArgs];
   }
   return args;
+}
+
+export function reducerCallbackArgs(
+  target: any[],
+  parent: object | undefined,
+  cache: CacheProxy,
+  cacheParents: CacheParentsProxy,
+  onChange: OnChangeHandler,
+  ...args: any[]
+) {
+  const [callbackFn, ...restArgs] = args;
+  function callback(this: any, ...callbackArgs: any[]) {
+    const proxiedArgs = callbackArgs.map((arg, index) => {
+      const directParent = target === arg ? undefined : parent;
+      return index > 0 ? createProxyTry(
+        arg,
+        directParent,
+        cache,
+        cacheParents,
+        onChange,
+        false,
+      ) : arg
+    });
+    return callbackFn.apply(this, proxiedArgs);
+  }
+  return [callback, ...restArgs];
 }
 
 export function checkCache(value: any, cache: CacheProxy) {

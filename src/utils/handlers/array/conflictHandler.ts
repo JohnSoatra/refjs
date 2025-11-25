@@ -36,6 +36,8 @@ export default function conflictArrayHandler<T extends any[]>(
     case "sort":
     case "toSorted":
       const callbackArgs = proxy ? createCallbackArgs(
+        this,
+        proxy,
         cache,
         cacheParents,
         onChange,

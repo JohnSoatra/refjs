@@ -82,6 +82,9 @@ export default function iteratorHandler<T extends any[] | Map<any, any> | Set<an
   onChange: OnChangeHandler,
 ) {
   const proxy = cache.get(this);
+  // if (proxy) {
+    
+  // }
   const iterator = target[key].call(this) as Iterator<any> & Iterable<any>;
   return proxy ? createProxiedIterator(
     iterator,

@@ -5,8 +5,8 @@ const Keys = {
   Has: 'has',
   Delete: 'delete',
   Clear: 'clear',
-  Reduce: 'reduce',
   ForbiddenKeys: new Set(['__proto__', 'constructor', 'prototype']),
+  ReduceKeys: new Set(['reduce', 'reduceRight']),
 } as const;
 
 export default Keys;
