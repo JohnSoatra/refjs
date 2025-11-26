@@ -16,49 +16,48 @@ export function createProxiedIterator<T extends any[] | Map<any, any> | Set<any>
   const isResultArray = key === 'entries' || (
     isMapCollection(target) && key === Symbol.iterator
   );
-  const proxiedIterator = {
-    next(this: any, value?: any) {
-      const matchedIterator = this === proxiedIterator ? iterator : this;
-      const rawIterator = getRawTry(matchedIterator);
-      const result = iterator.next.call(rawIterator, value);
-      if (!result.done) {
-        if (isResultArray) {
-          if (isTargetArray) {
-            const [, item] = result.value;
-            result.value[1] = createProxyTry(
-              item,
-              parent,
-              cache,
-              cacheParents,
-              onChange,
-              false,
-            );
-          } else {
-            result.value = result.value.map((each: any) => createProxyTry(
-              each,
-              parent,
-              cache,
-              cacheParents,
-              onChange,
-              false,
-            ));
-          }
-        } else {
-          result.value = createProxyTry(
-            result.value,
+  const proxiedIterator = Object.create(Object.getPrototypeOf(iterator));
+  proxiedIterator.next = function (this: any, value?: any) {
+    const matchedIterator = this === proxiedIterator ? iterator : this;
+    const rawIterator = getRawTry(matchedIterator);
+    const result = iterator.next.call(rawIterator, value);
+    if (!result.done) {
+      if (isResultArray) {
+        if (isTargetArray) {
+          const [, item] = result.value;
+          result.value[1] = createProxyTry(
+            item,
             parent,
             cache,
             cacheParents,
             onChange,
             false,
           );
+        } else {
+          result.value = result.value.map((each: any) => createProxyTry(
+            each,
+            parent,
+            cache,
+            cacheParents,
+            onChange,
+            false,
+          ));
         }
+      } else {
+        result.value = createProxyTry(
+          result.value,
+          parent,
+          cache,
+          cacheParents,
+          onChange,
+          false,
+        );
       }
-      return result;
-    },
-    [Symbol.iterator](this: any) {
-      return getRawTry(this);
     }
+    return result;
+  }
+  proxiedIterator[Symbol.iterator] = function (this: any) {
+    return getRawTry(this);
   }
   return proxiedIterator;
 }
@@ -82,9 +81,6 @@ export default function iteratorHandler<T extends any[] | Map<any, any> | Set<an
   onChange: OnChangeHandler,
 ) {
   const proxy = cache.get(this);
-  // if (proxy) {
-    
-  // }
   const iterator = target[key].call(this) as Iterator<any> & Iterable<any>;
   return proxy ? createProxiedIterator(
     iterator,
